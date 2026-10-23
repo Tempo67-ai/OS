@@ -1,2 +1,6 @@
-/labcodes/lab1/bin/
-/labcodes/lab1/obj/
+/code/bin/
+/code/obj/
+/code/.qemu.out
+/code/.gdb.in
+/code/cscope*
+/code/tags

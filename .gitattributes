@@ -1,2 +1,5 @@
-labcodes/lab1/** text eol=lf
-labcodes/lab1/report/images/** binary
+* text=auto
+code/** text eol=lf
+report/*.md text eol=lf
+report/logs/** text eol=lf
+report/images/** binary
