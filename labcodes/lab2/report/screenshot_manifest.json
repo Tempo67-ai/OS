@@ -1,0 +1,132 @@
+[
+  {
+    "id": "01-grade",
+    "title": "官方评分检查",
+    "command": "make GCCPREFIX=riscv64-elf- grade",
+    "sources": [
+      {
+        "file": "official-grade.log",
+        "first_line": 3,
+        "last_line": 5,
+        "sha256": "7acd6eaa7c73f6527ab278f331708c0a7ff734fdb76adfdeb042598d8d108f25"
+      }
+    ],
+    "screenshot": "screenshots/01-grade.jpg"
+  },
+  {
+    "id": "02-kernel",
+    "title": "内核启动与分配器自测",
+    "command": "QEMU 11.1.2 · 128 MiB · real RISC-V kernel",
+    "sources": [
+      {
+        "file": "kernel-128M.log",
+        "first_line": 65,
+        "last_line": 90,
+        "sha256": "3ea66878264001b2843530fe6302d430c1e1152b982ca9197b62fd451f969427"
+      }
+    ],
+    "screenshot": "screenshots/02-kernel.jpg"
+  },
+  {
+    "id": "03-memory",
+    "title": "多种内存配置与测试完整性",
+    "command": "python3 tools/verify.py",
+    "sources": [
+      {
+        "file": "verification.log",
+        "first_line": 1,
+        "last_line": 6,
+        "sha256": "8a671360deb33bdeedb9b9d5cbcd5c48fcd637e6bb50632c51a0ba2a96f9a9ee"
+      }
+    ],
+    "screenshot": "screenshots/03-memory.jpg"
+  },
+  {
+    "id": "04-guest",
+    "title": "客体 GDB：SATP与根页表项",
+    "command": "python3 tools/debug_guest.py",
+    "sources": [
+      {
+        "file": "guest-gdb.log",
+        "first_line": 1,
+        "last_line": 9,
+        "sha256": "ddaf4f7840bcb346c89a7680f06812f6e5db8f45fe5be398e81a144e96b58c81"
+      }
+    ],
+    "screenshot": "screenshots/04-guest.jpg"
+  },
+  {
+    "id": "05-mmu",
+    "title": "QEMU源码单步：页表遍历变量",
+    "command": "python3 debug/run_lldb.py mmu · QEMU 4.1.1 / TCI / LLDB",
+    "sources": [
+      {
+        "file": "qemu4-mmu-lldb.log",
+        "first_line": 102,
+        "last_line": 110,
+        "sha256": "2741036bc97a07eae8a4c94794c926c7399d7e102eb14ee7321e0cd88702ddd7"
+      },
+      {
+        "file": "qemu4-mmu-lldb.log",
+        "first_line": 124,
+        "last_line": 125,
+        "sha256": "2741036bc97a07eae8a4c94794c926c7399d7e102eb14ee7321e0cd88702ddd7"
+      }
+    ],
+    "screenshot": "screenshots/05-mmu.jpg"
+  },
+  {
+    "id": "06-fill",
+    "title": "QEMU源码单步：翻译返回与TLB填充",
+    "command": "QEMU 4.1.1 · actual source breakpoint variables",
+    "sources": [
+      {
+        "file": "qemu4-mmu-lldb.log",
+        "first_line": 154,
+        "last_line": 158,
+        "sha256": "2741036bc97a07eae8a4c94794c926c7399d7e102eb14ee7321e0cd88702ddd7"
+      },
+      {
+        "file": "qemu4-mmu-lldb.log",
+        "first_line": 175,
+        "last_line": 180,
+        "sha256": "2741036bc97a07eae8a4c94794c926c7399d7e102eb14ee7321e0cd88702ddd7"
+      }
+    ],
+    "screenshot": "screenshots/06-fill.jpg"
+  },
+  {
+    "id": "07-tlb",
+    "title": "软件TLB：未命中与填充后命中",
+    "command": "python3 debug/run_lldb.py tlb · same virtual address",
+    "sources": [
+      {
+        "file": "qemu4-tlb-lldb.log",
+        "first_line": 119,
+        "last_line": 123,
+        "sha256": "dab1ed5d259bdf79c34863495642afc8d20606f5af8743235f5de87b0f3c81ff"
+      },
+      {
+        "file": "qemu4-tlb-lldb.log",
+        "first_line": 140,
+        "last_line": 145,
+        "sha256": "dab1ed5d259bdf79c34863495642afc8d20606f5af8743235f5de87b0f3c81ff"
+      }
+    ],
+    "screenshot": "screenshots/07-tlb.jpg"
+  },
+  {
+    "id": "08-data",
+    "title": "真实数据load：读取boot_dtb并命中TLB",
+    "command": "QEMU 4.1.1 · code_read=false / size=8 (see full transcript)",
+    "sources": [
+      {
+        "file": "qemu4-tlb-lldb.log",
+        "first_line": 196,
+        "last_line": 201,
+        "sha256": "dab1ed5d259bdf79c34863495642afc8d20606f5af8743235f5de87b0f3c81ff"
+      }
+    ],
+    "screenshot": "screenshots/08-data.jpg"
+  }
+]

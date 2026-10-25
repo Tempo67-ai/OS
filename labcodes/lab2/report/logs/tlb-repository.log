@@ -1,0 +1,188 @@
+(lldb) target create "/Users/pailotien/Documents/轰轰烈烈的期末大复习/os_lab2_attempt/remote_OS/labcodes/lab2/debug/build/riscv64-softmmu/qemu-system-riscv64"
+Current executable set to '/Users/pailotien/Documents/轰轰烈烈的期末大复习/os_lab2_attempt/remote_OS/labcodes/lab2/debug/build/riscv64-softmmu/qemu-system-riscv64' (arm64).
+(lldb) settings set -- target.run-args  "-machine" "virt" "-nographic" "-bios" "/Users/pailotien/Documents/轰轰烈烈的期末大复习/os_lab2_attempt/remote_OS/labcodes/lab2/debug/qemu-4.1.1/pc-bios/opensbi-riscv64-virt-fw_jump.bin" "-kernel" "/Users/pailotien/Documents/轰轰烈烈的期末大复习/os_lab2_attempt/remote_OS/labcodes/lab2/bin/ucore.img"
+(lldb) command source -s 0 '/Users/pailotien/Documents/轰轰烈烈的期末大复习/os_lab2_attempt/remote_OS/labcodes/lab2/debug/tlb.lldb'
+Executing commands in '/Users/pailotien/Documents/轰轰烈烈的期末大复习/os_lab2_attempt/remote_OS/labcodes/lab2/debug/tlb.lldb'.
+(lldb) settings set target.disable-aslr false
+(lldb) settings set auto-confirm true
+(lldb) breakpoint set -n get_physical_address -c 'env->satp == 0' -o true
+Breakpoint 1: where = qemu-system-riscv64`get_physical_address + 56 at cpu_helper.c:163:16, address = 0x000000010012f504
+(lldb) run
+Process 68331 launched: '/Users/pailotien/Documents/轰轰烈烈的期末大复习/os_lab2_attempt/remote_OS/labcodes/lab2/debug/build/riscv64-softmmu/qemu-system-riscv64' (arm64)
+Process 68331 stopped
+* thread #4, stop reason = one-shot breakpoint 1
+    frame #0: 0x0000000100343504 qemu-system-riscv64`get_physical_address(env=0x00000007354b4a30, physical=0x000000016fd8ac50, prot=0x000000016fd8ac4c, addr=4096, access_type=2, mmu_idx=3) at cpu_helper.c:163:16
+   160 	     * correct, but the value visible to the exception handler
+   161 	     * (riscv_cpu_do_interrupt) is correct */
+   162 	
+-> 163 	    int mode = mmu_idx;
+    	               ^
+   164 	
+   165 	    if (mode == PRV_M && access_type != MMU_INST_FETCH) {
+   166 	        if (get_field(env->mstatus, MSTATUS_MPRV)) {
+Target 0: (qemu-system-riscv64) stopped.
+(lldb) frame variable -f x addr mmu_idx
+(target_ulong) addr = 0x0000000000001000
+(int) mmu_idx = 0x00000003
+(lldb) expression -f x -- env->satp
+(target_ulong) $0 = 0x0000000000000000
+(lldb) thread step-out
+Process 68331 stopped
+* thread #4, stop reason = step out
+Return value: (int) $1 = 0
+
+    frame #0: 0x0000000100344114 qemu-system-riscv64`riscv_cpu_tlb_fill(cs=0x00000007354ac000, address=4096, size=0, access_type=MMU_INST_FETCH, mmu_idx=3, probe=false, retaddr=0) at cpu_helper.c:451:9
+   448 	    qemu_log_mask(CPU_LOG_MMU, "%s ad %" VADDR_PRIx " rw %d mmu_idx %d\n",
+   449 	                  __func__, address, access_type, mmu_idx);
+   450 	
+-> 451 	    ret = get_physical_address(env, &pa, &prot, address, access_type, mmu_idx);
+    	        ^
+   452 	
+   453 	    if (mode == PRV_M && access_type != MMU_INST_FETCH) {
+   454 	        if (get_field(env->mstatus, MSTATUS_MPRV)) {
+Target 0: (qemu-system-riscv64) stopped.
+(lldb) thread step-over
+Process 68331 stopped
+* thread #4, stop reason = step over
+    frame #0: 0x0000000100344118 qemu-system-riscv64`riscv_cpu_tlb_fill(cs=0x00000007354ac000, address=4096, size=0, access_type=MMU_INST_FETCH, mmu_idx=3, probe=false, retaddr=0) at cpu_helper.c:453:9
+   450 	
+   451 	    ret = get_physical_address(env, &pa, &prot, address, access_type, mmu_idx);
+   452 	
+-> 453 	    if (mode == PRV_M && access_type != MMU_INST_FETCH) {
+    	        ^
+   454 	        if (get_field(env->mstatus, MSTATUS_MPRV)) {
+   455 	            mode = get_field(env->mstatus, MSTATUS_MPP);
+   456 	        }
+Target 0: (qemu-system-riscv64) stopped.
+(lldb) frame variable -f x address pa ret
+(vaddr) address = 0x0000000000001000
+(hwaddr) pa = 0x0000000000001000
+(int) ret = 0x00000000
+(lldb) breakpoint set -f cputlb.c -l 1030 -c 'addr == 0xffffffffc02000d6ULL' -o true
+Breakpoint 2: where = qemu-system-riscv64`get_page_addr_code + 88 at cputlb.c:1030:9, address = 0x00000001002a64e8
+(lldb) continue
+
+OpenSBI v0.4 (Jul  2 2019 11:53:53)
+   ____                    _____ ____ _____
+  / __ \                  / ____|  _ \_   _|
+ | |  | |_ __   ___ _ __ | (___ | |_) || |
+ | |  | | '_ \ / _ \ '_ \ \___ \|  _ < | |
+ | |__| | |_) |  __/ | | |____) | |_) || |_
+  \____/| .__/ \___|_| |_|_____/|____/_____|
+        | |
+        |_|
+
+Platform Name          : QEMU Virt Machine
+Platform HART Features : RV64ACDFIMSU
+Platform Max HARTs     : 8
+Current Hart           : 0
+Firmware Base          : 0x80000000
+Firmware Size          : 112 KB
+Runtime SBI Version    : 0.1
+
+PMP0: 0x0000000080000000-0x000000008001ffff (A)
+PMP1: 0x0000000000000000-0xffffffffffffffff (A,R,W,X)
+Process 68331 resuming
+Process 68331 stopped
+* thread #4, stop reason = one-shot breakpoint 2
+    frame #0: 0x00000001002a64e8 qemu-system-riscv64`get_page_addr_code(env=0x00000007354b4a30, addr=18446744072637907158) at cputlb.c:1030:9
+   1027	    CPUTLBEntry *entry = tlb_entry(env, mmu_idx, addr);
+   1028	    void *p;
+   1029	
+-> 1030	    if (unlikely(!tlb_hit(entry->addr_code, addr))) {
+    	        ^
+   1031	        if (!VICTIM_TLB_HIT(addr_code, addr)) {
+   1032	            tlb_fill(env_cpu(env), addr, 0, MMU_INST_FETCH, mmu_idx, 0);
+   1033	            index = tlb_index(env, mmu_idx, addr);
+Target 0: (qemu-system-riscv64) stopped.
+(lldb) frame variable -f x addr entry->addr_code
+(target_ulong) addr = 0xffffffffc02000d6
+(target_ulong) entry->addr_code = 0xffffffffffffffff
+(lldb) expression -- ((entry->addr_code ^ addr) & ~4095ULL) == 0
+(bool) $2 = false
+(lldb) breakpoint set -f cputlb.c -l 1036 -c 'addr == 0xffffffffc02000d6ULL' -o true
+Breakpoint 3: where = qemu-system-riscv64`get_page_addr_code + 228 at cputlb.c:1036:9, address = 0x00000001002a6574
+(lldb) continue
+Process 68331 resuming
+Process 68331 stopped
+* thread #4, stop reason = one-shot breakpoint 3
+    frame #0: 0x00000001002a6574 qemu-system-riscv64`get_page_addr_code(env=0x00000007354b4a30, addr=18446744072637907158) at cputlb.c:1036:9
+   1033	            index = tlb_index(env, mmu_idx, addr);
+   1034	            entry = tlb_entry(env, mmu_idx, addr);
+   1035	        }
+-> 1036	        assert(tlb_hit(entry->addr_code, addr));
+    	        ^
+   1037	    }
+   1038	
+   1039	    if (unlikely(entry->addr_code & (TLB_RECHECK | TLB_MMIO))) {
+Target 0: (qemu-system-riscv64) stopped.
+(lldb) frame variable -f x addr entry->addr_code entry->addend
+(target_ulong) addr = 0xffffffffc02000d6
+(target_ulong) entry->addr_code = 0xffffffffc0200000
+(uintptr_t) entry->addend = 0x0000000147c9c000
+(lldb) expression -- ((entry->addr_code ^ addr) & ~4095ULL) == 0
+(bool) $3 = true
+(lldb) breakpoint set -f cputlb.c -l 1270 -c 'addr == 0xffffffffc02000d6ULL && code_read' -o true
+Breakpoint 4: 14 locations.
+(lldb) continue
+Process 68331 resuming
+Process 68331 stopped
+* thread #4, stop reason = one-shot breakpoint 4
+    frame #0: 0x00000001002bec2c qemu-system-riscv64`load_helper(env=0x00000007354b4a30, addr=18446744072637907158, oi=33, retaddr=0, size=4, big_endian=false, code_read=true, full_load=(qemu-system-riscv64`full_le_ldul_cmmu at cputlb.c:1781)) at cputlb.c:1271:18 [inlined]
+   1268	    }
+   1269	
+   1270	    /* If the TLB entry is for a different page, reload and try again.  */
+-> 1271	    if (!tlb_hit(tlb_addr, addr)) {
+    	                 ^
+   1272	        if (!victim_tlb_hit(env, mmu_idx, index, tlb_off,
+   1273	                            addr & TARGET_PAGE_MASK)) {
+   1274	            tlb_fill(env_cpu(env), addr, size,
+Target 0: (qemu-system-riscv64) stopped.
+(lldb) frame variable -f x addr tlb_addr entry->addr_code
+(target_ulong) addr = 0xffffffffc02000d6
+(target_ulong) tlb_addr = 0xffffffffc0200000
+(target_ulong) entry->addr_code = 0xffffffffc0200000
+(lldb) expression -- ((tlb_addr ^ addr) & ~4095ULL) == 0
+(bool) $4 = true
+(lldb) bt 6
+* thread #4, stop reason = one-shot breakpoint 4
+  * frame #0: 0x00000001002bec2c qemu-system-riscv64`load_helper(env=0x00000007354b4a30, addr=18446744072637907158, oi=33, retaddr=0, size=4, big_endian=false, code_read=true, full_load=(qemu-system-riscv64`full_le_ldul_cmmu at cputlb.c:1781)) at cputlb.c:1271:18 [inlined]
+    frame #1: 0x00000001002beb24 qemu-system-riscv64`full_le_ldul_cmmu(env=0x00000007354b4a30, addr=18446744072637907158, oi=33, retaddr=0) at cputlb.c:1782:12
+    frame #2: 0x00000001002beab8 qemu-system-riscv64`helper_le_ldl_cmmu(env=0x00000007354b4a30, addr=18446744072637907158, oi=33, retaddr=0) at cputlb.c:1789:12
+    frame #3: 0x0000000100330a2c qemu-system-riscv64`cpu_ldl_code_ra(env=0x00000007354b4a30, ptr=18446744072637907158, retaddr=0) at cpu_ldst_template.h:102:15
+    frame #4: 0x00000001003308b8 qemu-system-riscv64`cpu_ldl_code(env=0x00000007354b4a30, ptr=18446744072637907158) at cpu_ldst_template.h:114:12
+    frame #5: 0x0000000100330398 qemu-system-riscv64`riscv_tr_translate_insn(dcbase=0x000000016fd8acd8, cpu=0x00000007354ac000) at translate.c:799:19
+(lldb) breakpoint set -f cputlb.c -l 1270 -c 'addr == 0xffffffffc0207008ULL && !code_read' -o true
+Breakpoint 5: 14 locations.
+(lldb) continue
+DTB Init
+HartID: 0
+Process 68331 resuming
+Process 68331 stopped
+* thread #4, stop reason = one-shot breakpoint 5
+    frame #0: 0x00000001002a8dbc qemu-system-riscv64`load_helper(env=0x00000007354b4a30, addr=18446744072637935624, oi=49, retaddr=4392499885, size=8, big_endian=false, code_read=false, full_load=(qemu-system-riscv64`helper_le_ldq_mmu at cputlb.c:1448)) at cputlb.c:1271:18 [inlined]
+   1268	    }
+   1269	
+   1270	    /* If the TLB entry is for a different page, reload and try again.  */
+-> 1271	    if (!tlb_hit(tlb_addr, addr)) {
+    	                 ^
+   1272	        if (!victim_tlb_hit(env, mmu_idx, index, tlb_off,
+   1273	                            addr & TARGET_PAGE_MASK)) {
+   1274	            tlb_fill(env_cpu(env), addr, size,
+Target 0: (qemu-system-riscv64) stopped.
+(lldb) frame variable -f x addr tlb_addr entry->addr_read
+(target_ulong) addr = 0xffffffffc0207008
+(target_ulong) tlb_addr = 0xffffffffc0207000
+(target_ulong) entry->addr_read = 0xffffffffc0207000
+(lldb) expression -- ((tlb_addr ^ addr) & ~4095ULL) == 0
+(bool) $5 = true
+(lldb) bt 6
+* thread #4, stop reason = one-shot breakpoint 5
+  * frame #0: 0x00000001002a8dbc qemu-system-riscv64`load_helper(env=0x00000007354b4a30, addr=18446744072637935624, oi=49, retaddr=4392499885, size=8, big_endian=false, code_read=false, full_load=(qemu-system-riscv64`helper_le_ldq_mmu at cputlb.c:1448)) at cputlb.c:1271:18 [inlined]
+    frame #1: 0x00000001002a8cb4 qemu-system-riscv64`helper_le_ldq_mmu(env=0x00000007354b4a30, addr=18446744072637935624, oi=49, retaddr=4392499885) at cputlb.c:1449:12
+    frame #2: 0x0000000100255638 qemu-system-riscv64`tcg_qemu_tb_exec(env=0x00000007354b4a30, tb_ptr="M\b") at tci.c:1169:25
+    frame #3: 0x00000001002c8f9c qemu-system-riscv64`cpu_tb_exec(cpu=0x00000007354ac000, itb=0x0000000105d03980) at cpu-exec.c:173:11
+    frame #4: 0x00000001002c9fd8 qemu-system-riscv64`cpu_loop_exec_tb(cpu=0x00000007354ac000, tb=0x0000000105d03980, last_tb=0x000000016fd8aec0, tb_exit=0x000000016fd8aebc) at cpu-exec.c:621:11
+    frame #5: 0x00000001002c9678 qemu-system-riscv64`cpu_exec(cpu=0x00000007354ac000) at cpu-exec.c:732:13
+(lldb) quit
+

@@ -1,0 +1,21 @@
+settings set target.disable-aslr false
+settings set auto-confirm true
+breakpoint set -n get_physical_address -c 'addr >= 0xffffffffc0200000ULL'
+run
+bt 10
+frame variable addr access_type mmu_idx
+expression -f x -- env->satp
+breakpoint disable 1
+breakpoint set -f cpu_helper.c -l 334 -c 'addr >= 0xffffffffc0200000ULL' -o true
+continue
+frame variable -f x addr base idx pte_addr pte ppn ptshift vpn
+thread step-over
+expression -f x -- *physical
+thread step-out
+thread step-over
+frame variable -f x address pa prot ret
+breakpoint set -n tlb_set_page -c 'vaddr >= 0xffffffffc0200000ULL' -o true
+continue
+frame variable -f x vaddr paddr prot mmu_idx size
+bt 8
+quit

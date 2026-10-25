@@ -1,0 +1,170 @@
+(lldb) target create "/Users/pailotien/Documents/轰轰烈烈的期末大复习/os_lab2_attempt/remote_OS/labcodes/lab2/debug/build/riscv64-softmmu/qemu-system-riscv64"
+Current executable set to '/Users/pailotien/Documents/轰轰烈烈的期末大复习/os_lab2_attempt/remote_OS/labcodes/lab2/debug/build/riscv64-softmmu/qemu-system-riscv64' (arm64).
+(lldb) settings set -- target.run-args  "-machine" "virt" "-nographic" "-bios" "/Users/pailotien/Documents/轰轰烈烈的期末大复习/os_lab2_attempt/remote_OS/labcodes/lab2/debug/qemu-4.1.1/pc-bios/opensbi-riscv64-virt-fw_jump.bin" "-kernel" "/Users/pailotien/Documents/轰轰烈烈的期末大复习/os_lab2_attempt/remote_OS/labcodes/lab2/bin/ucore.img"
+(lldb) command source -s 0 '/Users/pailotien/Documents/轰轰烈烈的期末大复习/os_lab2_attempt/remote_OS/labcodes/lab2/debug/mmu.lldb'
+Executing commands in '/Users/pailotien/Documents/轰轰烈烈的期末大复习/os_lab2_attempt/remote_OS/labcodes/lab2/debug/mmu.lldb'.
+(lldb) settings set target.disable-aslr false
+(lldb) settings set auto-confirm true
+(lldb) breakpoint set -n get_physical_address -c 'addr >= 0xffffffffc0200000ULL'
+Breakpoint 1: where = qemu-system-riscv64`get_physical_address + 56 at cpu_helper.c:163:16, address = 0x000000010012f504
+(lldb) run
+
+OpenSBI v0.4 (Jul  2 2019 11:53:53)
+   ____                    _____ ____ _____
+  / __ \                  / ____|  _ \_   _|
+ | |  | |_ __   ___ _ __ | (___ | |_) || |
+ | |  | | '_ \ / _ \ '_ \ \___ \|  _ < | |
+ | |__| | |_) |  __/ | | |____) | |_) || |_
+  \____/| .__/ \___|_| |_|_____/|____/_____|
+        | |
+        |_|
+
+Platform Name          : QEMU Virt Machine
+Platform HART Features : RV64ACDFIMSU
+Platform Max HARTs     : 8
+Current Hart           : 0
+Firmware Base          : 0x80000000
+Firmware Size          : 112 KB
+Runtime SBI Version    : 0.1
+
+PMP0: 0x0000000080000000-0x000000008001ffff (A)
+PMP1: 0x0000000000000000-0xffffffffffffffff (A,R,W,X)
+Process 68323 launched: '/Users/pailotien/Documents/轰轰烈烈的期末大复习/os_lab2_attempt/remote_OS/labcodes/lab2/debug/build/riscv64-softmmu/qemu-system-riscv64' (arm64)
+Process 68323 stopped
+* thread #4, stop reason = breakpoint 1.1
+    frame #0: 0x0000000104d6b504 qemu-system-riscv64`get_physical_address(env=0x0000000c554b4a30, physical=0x000000016b362c50, prot=0x000000016b362c4c, addr=18446744072637907158, access_type=2, mmu_idx=1) at cpu_helper.c:163:16
+   160 	     * correct, but the value visible to the exception handler
+   161 	     * (riscv_cpu_do_interrupt) is correct */
+   162 	
+-> 163 	    int mode = mmu_idx;
+    	               ^
+   164 	
+   165 	    if (mode == PRV_M && access_type != MMU_INST_FETCH) {
+   166 	        if (get_field(env->mstatus, MSTATUS_MPRV)) {
+Target 0: (qemu-system-riscv64) stopped.
+(lldb) bt 10
+* thread #4, stop reason = breakpoint 1.1
+  * frame #0: 0x0000000104d6b504 qemu-system-riscv64`get_physical_address(env=0x0000000c554b4a30, physical=0x000000016b362c50, prot=0x000000016b362c4c, addr=18446744072637907158, access_type=2, mmu_idx=1) at cpu_helper.c:163:16
+    frame #1: 0x0000000104d6c114 qemu-system-riscv64`riscv_cpu_tlb_fill(cs=0x0000000c554ac000, address=18446744072637907158, size=0, access_type=MMU_INST_FETCH, mmu_idx=1, probe=false, retaddr=0) at cpu_helper.c:451:11
+    frame #2: 0x0000000104cce8cc qemu-system-riscv64`tlb_fill(cpu=0x0000000c554ac000, addr=18446744072637907158, size=0, access_type=MMU_INST_FETCH, mmu_idx=1, retaddr=0) at cputlb.c:878:10
+    frame #3: 0x0000000104cce548 qemu-system-riscv64`get_page_addr_code(env=0x0000000c554b4a30, addr=18446744072637907158) at cputlb.c:1032:13
+    frame #4: 0x0000000104cf1194 qemu-system-riscv64`tb_htable_lookup(cpu=0x0000000c554ac000, pc=18446744072637907158, cs_base=0, flags=24577, cf_mask=4278714368) at cpu-exec.c:339:15
+    frame #5: 0x0000000104cf0d98 qemu-system-riscv64`tb_lookup__cpu_state(cpu=0x0000000c554ac000, pc=0x000000016b362e68, cs_base=0x000000016b362e70, flags=0x000000016b362e64, cf_mask=4278714368) at tb-lookup.h:43:10
+    frame #6: 0x0000000104cf1ec4 qemu-system-riscv64`tb_find(cpu=0x0000000c554ac000, last_tb=0x0000000000000000, tb_exit=0, cf_mask=524288) at cpu-exec.c:406:10
+    frame #7: 0x0000000104cf1660 qemu-system-riscv64`cpu_exec(cpu=0x0000000c554ac000) at cpu-exec.c:731:18
+    frame #8: 0x0000000104ca431c qemu-system-riscv64`tcg_cpu_exec(cpu=0x0000000c554ac000) at cpus.c:1435:11
+    frame #9: 0x0000000104ca3ba8 qemu-system-riscv64`qemu_tcg_cpu_thread_fn(arg=0x0000000c554ac000) at cpus.c:1743:17
+(lldb) frame variable addr access_type mmu_idx
+(target_ulong) addr = 18446744072637907158
+(int) access_type = 2
+(int) mmu_idx = 1
+(lldb) expression -f x -- env->satp
+(target_ulong) $0 = 0x8000000000080206
+(lldb) breakpoint disable 1
+1 breakpoints disabled.
+(lldb) breakpoint set -f cpu_helper.c -l 334 -c 'addr >= 0xffffffffc0200000ULL' -o true
+Breakpoint 2: where = qemu-system-riscv64`get_physical_address + 2116 at cpu_helper.c:334:26, address = 0x0000000104d6bd10
+(lldb) continue
+Process 68323 resuming
+Process 68323 stopped
+* thread #4, stop reason = one-shot breakpoint 2
+    frame #0: 0x0000000104d6bd10 qemu-system-riscv64`get_physical_address(env=0x0000000c554b4a30, physical=0x000000016b362c50, prot=0x000000016b362c4c, addr=18446744072637907158, access_type=2, mmu_idx=1) at cpu_helper.c:334:26
+   331 	            /* for superpage mappings, make a fake leaf PTE for the TLB's
+   332 	               benefit. */
+   333 	            target_ulong vpn = addr >> PGSHIFT;
+-> 334 	            *physical = (ppn | (vpn & ((1L << ptshift) - 1))) << PGSHIFT;
+    	                         ^
+   335 	
+   336 	            /* set permissions on the TLB entry */
+   337 	            if ((pte & PTE_R) || ((pte & PTE_X) && mxr)) {
+Target 0: (qemu-system-riscv64) stopped.
+(lldb) frame variable -f x addr base idx pte_addr pte ppn ptshift vpn
+(target_ulong) addr = 0xffffffffc02000d6
+(target_ulong) base = 0x0000000080206000
+(target_ulong) idx = 0x00000000000001ff
+(target_ulong) pte_addr = 0x0000000080206ff8
+(target_ulong) pte = 0x00000000200000cf
+(target_ulong) ppn = 0x0000000000080000
+(int) ptshift = 0x00000012
+(target_ulong) vpn = 0x000ffffffffc0200
+(lldb) thread step-over
+Process 68323 stopped
+* thread #4, stop reason = step over
+    frame #0: 0x0000000104d6bd40 qemu-system-riscv64`get_physical_address(env=0x0000000c554b4a30, physical=0x000000016b362c50, prot=0x000000016b362c4c, addr=18446744072637907158, access_type=2, mmu_idx=1) at cpu_helper.c:337:18
+   334 	            *physical = (ppn | (vpn & ((1L << ptshift) - 1))) << PGSHIFT;
+   335 	
+   336 	            /* set permissions on the TLB entry */
+-> 337 	            if ((pte & PTE_R) || ((pte & PTE_X) && mxr)) {
+    	                 ^
+   338 	                *prot |= PAGE_READ;
+   339 	            }
+   340 	            if ((pte & PTE_X)) {
+Target 0: (qemu-system-riscv64) stopped.
+(lldb) expression -f x -- *physical
+(hwaddr) $1 = 0x0000000080200000
+(lldb) thread step-out
+Process 68323 stopped
+* thread #4, stop reason = step out
+Return value: (int) $2 = 0
+
+    frame #0: 0x0000000104d6c114 qemu-system-riscv64`riscv_cpu_tlb_fill(cs=0x0000000c554ac000, address=18446744072637907158, size=0, access_type=MMU_INST_FETCH, mmu_idx=1, probe=false, retaddr=0) at cpu_helper.c:451:9
+   448 	    qemu_log_mask(CPU_LOG_MMU, "%s ad %" VADDR_PRIx " rw %d mmu_idx %d\n",
+   449 	                  __func__, address, access_type, mmu_idx);
+   450 	
+-> 451 	    ret = get_physical_address(env, &pa, &prot, address, access_type, mmu_idx);
+    	        ^
+   452 	
+   453 	    if (mode == PRV_M && access_type != MMU_INST_FETCH) {
+   454 	        if (get_field(env->mstatus, MSTATUS_MPRV)) {
+Target 0: (qemu-system-riscv64) stopped.
+(lldb) thread step-over
+Process 68323 stopped
+* thread #4, stop reason = step over
+    frame #0: 0x0000000104d6c118 qemu-system-riscv64`riscv_cpu_tlb_fill(cs=0x0000000c554ac000, address=18446744072637907158, size=0, access_type=MMU_INST_FETCH, mmu_idx=1, probe=false, retaddr=0) at cpu_helper.c:453:9
+   450 	
+   451 	    ret = get_physical_address(env, &pa, &prot, address, access_type, mmu_idx);
+   452 	
+-> 453 	    if (mode == PRV_M && access_type != MMU_INST_FETCH) {
+    	        ^
+   454 	        if (get_field(env->mstatus, MSTATUS_MPRV)) {
+   455 	            mode = get_field(env->mstatus, MSTATUS_MPP);
+   456 	        }
+Target 0: (qemu-system-riscv64) stopped.
+(lldb) frame variable -f x address pa prot ret
+(vaddr) address = 0xffffffffc02000d6
+(hwaddr) pa = 0x0000000080200000
+(int) prot = 0x00000007
+(int) ret = 0x00000000
+(lldb) breakpoint set -n tlb_set_page -c 'vaddr >= 0xffffffffc0200000ULL' -o true
+Breakpoint 3: where = qemu-system-riscv64`tlb_set_page + 36 at cputlb.c:847:29, address = 0x0000000104cce3e8
+(lldb) continue
+Process 68323 resuming
+Process 68323 stopped
+* thread #4, stop reason = one-shot breakpoint 3
+    frame #0: 0x0000000104cce3e8 qemu-system-riscv64`tlb_set_page(cpu=0x0000000c554ac000, vaddr=18446744072637906944, paddr=2149580800, prot=7, mmu_idx=1, size=4096) at cputlb.c:847:29
+   844 	                  hwaddr paddr, int prot,
+   845 	                  int mmu_idx, target_ulong size)
+   846 	{
+-> 847 	    tlb_set_page_with_attrs(cpu, vaddr, paddr, MEMTXATTRS_UNSPECIFIED,
+    	                            ^
+   848 	                            prot, mmu_idx, size);
+   849 	}
+   850 	
+Target 0: (qemu-system-riscv64) stopped.
+(lldb) frame variable -f x vaddr paddr prot mmu_idx size
+(target_ulong) vaddr = 0xffffffffc0200000
+(hwaddr) paddr = 0x0000000080200000
+(int) prot = 0x00000007
+(int) mmu_idx = 0x00000001
+(target_ulong) size = 0x0000000000001000
+(lldb) bt 8
+* thread #4, stop reason = one-shot breakpoint 3
+  * frame #0: 0x0000000104cce3e8 qemu-system-riscv64`tlb_set_page(cpu=0x0000000c554ac000, vaddr=18446744072637906944, paddr=2149580800, prot=7, mmu_idx=1, size=4096) at cputlb.c:847:29
+    frame #1: 0x0000000104d6c270 qemu-system-riscv64`riscv_cpu_tlb_fill(cs=0x0000000c554ac000, address=18446744072637907158, size=0, access_type=MMU_INST_FETCH, mmu_idx=1, probe=false, retaddr=0) at cpu_helper.c:472:9
+    frame #2: 0x0000000104cce8cc qemu-system-riscv64`tlb_fill(cpu=0x0000000c554ac000, addr=18446744072637907158, size=0, access_type=MMU_INST_FETCH, mmu_idx=1, retaddr=0) at cputlb.c:878:10
+    frame #3: 0x0000000104cce548 qemu-system-riscv64`get_page_addr_code(env=0x0000000c554b4a30, addr=18446744072637907158) at cputlb.c:1032:13
+    frame #4: 0x0000000104cf1194 qemu-system-riscv64`tb_htable_lookup(cpu=0x0000000c554ac000, pc=18446744072637907158, cs_base=0, flags=24577, cf_mask=4278714368) at cpu-exec.c:339:15
+    frame #5: 0x0000000104cf0d98 qemu-system-riscv64`tb_lookup__cpu_state(cpu=0x0000000c554ac000, pc=0x000000016b362e68, cs_base=0x000000016b362e70, flags=0x000000016b362e64, cf_mask=4278714368) at tb-lookup.h:43:10
+    frame #6: 0x0000000104cf1ec4 qemu-system-riscv64`tb_find(cpu=0x0000000c554ac000, last_tb=0x0000000000000000, tb_exit=0, cf_mask=524288) at cpu-exec.c:406:10
+    frame #7: 0x0000000104cf1660 qemu-system-riscv64`cpu_exec(cpu=0x0000000c554ac000) at cpu-exec.c:731:18
+(lldb) quit

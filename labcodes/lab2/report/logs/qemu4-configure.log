@@ -1,0 +1,146 @@
+Install prefix    /usr/local
+BIOS directory    /usr/local/share/qemu
+firmware path     /usr/local/share/qemu-firmware
+binary directory  /usr/local/bin
+library directory /usr/local/lib
+module directory  /usr/local/lib/qemu
+libexec directory /usr/local/libexec
+include directory /usr/local/include
+config directory  /usr/local/etc
+local state directory   /usr/local/var
+Manual directory  /usr/local/share/man
+ELF interp prefix /usr/gnemul/qemu-%M
+Source path       /Users/pailotien/Documents/轰轰烈烈的期末大复习/os_lab2_attempt/debug/qemu-4.1.1
+GIT binary        git
+GIT submodules    
+C compiler        cc
+Host C compiler   cc
+C++ compiler      c++
+Objective-C compiler clang
+ARFLAGS           rv
+CFLAGS            -g 
+QEMU_CFLAGS       -I/opt/homebrew/Cellar/pixman/0.46.4/include/pixman-1   -I/opt/homebrew/Cellar/glib/2.90.1/include -I/opt/homebrew/Cellar/glib/2.90.1/include/glib-2.0 -I/opt/homebrew/Cellar/glib/2.90.1/lib/glib-2.0/include -I/opt/homebrew/opt/gettext/include -I/opt/homebrew/Cellar/pcre2/10.49/include  -DOS_OBJECT_USE_OBJC=0 -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -Wstrict-prototypes -Wredundant-decls -Wall -Wundef -Wwrite-strings -Wmissing-prototypes -fno-strict-aliasing -fno-common -fwrapv -std=gnu99  -I/opt/homebrew/include -Wno-string-plus-int -Wno-typedef-redefinition -Wno-initializer-overrides -Wexpansion-to-defined -Wendif-labels -Wno-shift-negative-value -Wno-missing-include-dirs -Wempty-body -Wnested-externs -Wformat-security -Wformat-y2k -Winit-self -Wignored-qualifiers -Wold-style-definition -Wtype-limits -fstack-protector-strong
+LDFLAGS           -framework Hypervisor -framework CoreFoundation -framework IOKit -g  -L/opt/homebrew/lib
+QEMU_LDFLAGS       
+make              make
+install           install
+python            /opt/homebrew/bin/python3.12 -B (3.12.13)
+slirp support     no 
+module support    no
+host CPU          aarch64
+host big endian   no
+target list       riscv64-softmmu
+gprof enabled     no
+sparse enabled    no
+strip binaries    no
+profiler          no
+static build      no
+Cocoa support     no
+SDL support       no 
+SDL image support no
+GTK support       no 
+GTK GL support    no
+VTE support       no 
+TLS priority      NORMAL
+GNUTLS support    no
+libgcrypt         no
+nettle            no 
+libtasn1          yes
+PAM               yes
+iconv support     yes
+curses support    no
+virgl support     no 
+curl support      no
+mingw32 support   no
+Audio drivers     
+Block whitelist (rw) 
+Block whitelist (ro) 
+VirtFS support    no
+Multipath support no
+VNC support       no
+xen support       no
+brlapi support    no
+bluez  support    no
+Documentation     no
+PIE               no
+vde support       yes
+netmap support    no
+Linux AIO support no
+ATTR/XATTR support no
+Install blobs     yes
+KVM support       no
+HAX support       no
+HVF support       yes
+WHPX support      no
+TCG support       yes
+TCG debug enabled yes
+TCG interpreter   no
+malloc trim support no
+RDMA support      no
+PVRDMA support    no
+fdt support       system
+membarrier        no
+preadv support    yes
+fdatasync         no
+madvise           yes
+posix_madvise     yes
+posix_memalign    yes
+libcap-ng support no
+vhost-net support yes
+vhost-crypto support yes
+vhost-scsi support no
+vhost-vsock support no
+vhost-user support yes
+Trace backends    log
+spice support     no 
+rbd support       no
+xfsctl support    no
+smartcard support no
+libusb            no
+usb net redir     no
+OpenGL support    no
+OpenGL dmabufs    no
+libiscsi support  no
+libnfs support    no
+build guest agent no
+QGA VSS support   no
+QGA w32 disk info no
+QGA MSI support   no
+seccomp support   no
+coroutine backend sigaltstack
+coroutine pool    yes
+debug stack usage no
+mutex debugging   yes
+crypto afalg      no
+GlusterFS support no
+gcov              gcov
+gcov enabled      no
+TPM support       yes
+libssh support    no
+QOM debugging     yes
+Live block migration yes
+lzo support       yes
+snappy support    yes
+bzip2 support     yes
+lzfse support     no
+NUMA host support no
+libxml2           yes
+tcmalloc support  no
+jemalloc support  no
+avx2 optimization 
+replication support yes
+VxHS block device no
+bochs support     yes
+cloop support     yes
+dmg support       yes
+qcow v1 support   yes
+vdi support       yes
+vvfat support     yes
+qed support       yes
+parallels support yes
+sheepdog support  yes
+capstone          no
+docker            no
+libpmem support   no
+libudev           no
+default devices   yes

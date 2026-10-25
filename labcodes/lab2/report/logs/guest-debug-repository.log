@@ -1,0 +1,59 @@
++ cc kern/init/entry.S
++ cc kern/init/init.c
++ cc kern/libs/stdio.c
++ cc kern/debug/panic.c
++ cc kern/driver/console.c
++ cc kern/driver/dtb.c
++ cc kern/mm/best_fit_pmm.c
++ cc kern/mm/buddy_pmm.c
++ cc kern/mm/default_pmm.c
++ cc kern/mm/pmm.c
++ cc kern/mm/slub.c
++ cc libs/printfmt.c
++ cc libs/readline.c
++ cc libs/sbi.c
++ cc libs/string.c
++ ld bin/kernel
+riscv64-elf-objcopy bin/kernel --strip-all -O binary bin/ucore.img
+0x0000000000001000 in ?? ()
+Hardware assisted breakpoint 1 at 0xffffffffc02000d6: file kern/init/init.c, line 32.
+
+Breakpoint 1, kern_init () at kern/init/init.c:32
+32	    memset(edata, 0, end - edata);
+pc             0xffffffffc02000d6	0xffffffffc02000d6 <kern_init>
+satp           0x8000000000080206	-9223372036854251002
+0xffffffffc0206010:	0x00000000200000cf
+0xffffffffc0206ff8:	0x00000000200000cf
+Dump of assembler code for function kern_entry:
+   0xffffffffc0200000 <+0>:	00007297        	auipc	t0,0x7
+   0xffffffffc0200004 <+4>:	00028293        	mv	t0,t0
+   0xffffffffc0200008 <+8>:	00a2b023        	sd	a0,0(t0) # 0xffffffffc0207000
+   0xffffffffc020000c <+12>:	00007297        	auipc	t0,0x7
+   0xffffffffc0200010 <+16>:	ffc28293        	addi	t0,t0,-4 # 0xffffffffc0207008
+   0xffffffffc0200014 <+20>:	00b2b023        	sd	a1,0(t0)
+   0xffffffffc0200018 <+24>:	c02062b7        	lui	t0,0xc0206
+   0xffffffffc020001c <+28>:	ffd0031b        	addiw	t1,zero,-3
+   0xffffffffc0200020 <+32>:	037a              	slli	t1,t1,0x1e
+   0xffffffffc0200022 <+34>:	406282b3        	sub	t0,t0,t1
+   0xffffffffc0200026 <+38>:	00c2d293        	srli	t0,t0,0xc
+   0xffffffffc020002a <+42>:	fff0031b        	addiw	t1,zero,-1
+   0xffffffffc020002e <+46>:	137e              	slli	t1,t1,0x3f
+   0xffffffffc0200030 <+48>:	0062e2b3        	or	t0,t0,t1
+   0xffffffffc0200034 <+52>:	18029073        	csrw	satp,t0
+   0xffffffffc0200038 <+56>:	12000073        	sfence.vma
+   0xffffffffc020003c <+60>:	c0206137        	lui	sp,0xc0206
+   0xffffffffc0200040 <+64>:	c02002b7        	lui	t0,0xc0200
+   0xffffffffc0200044 <+68>:	0d628293        	addi	t0,t0,214 # 0xffffffffc02000d6 <kern_init>
+   0xffffffffc0200048 <+72>:	8282              	jr	t0
+End of assembler dump.
+Hardware assisted breakpoint 2 at 0xffffffffc020229c: file kern/mm/slub.c, line 85.
+
+Breakpoint 2, slub_check () at kern/mm/slub.c:85
+85	    size_t before = nr_free_pages();
+pc             0xffffffffc020229c	0xffffffffc020229c <slub_check>
+satp           0x8000000000080206	-9223372036854251002
+$1 = 0xffffffff40000000
+$2 = 0x88000
+$3 = 0xffffffffc0208000
+[Inferior 1 (process 1) detached]
+

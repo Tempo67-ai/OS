@@ -1,0 +1,4 @@
+Capture session: 2026-10-25T21:55:45+08:00
+Host: macOS arm64
+riscv64-elf-gcc (GCC) 16.2.0
+Source: fresh real kernel/QEMU runs; no output synthesized.

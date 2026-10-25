@@ -1,0 +1,28 @@
+settings set target.disable-aslr false
+settings set auto-confirm true
+breakpoint set -n get_physical_address -c 'env->satp == 0' -o true
+run
+frame variable -f x addr mmu_idx
+expression -f x -- env->satp
+thread step-out
+thread step-over
+frame variable -f x address pa ret
+breakpoint set -f cputlb.c -l 1030 -c 'addr == 0xffffffffc02000d6ULL' -o true
+continue
+frame variable -f x addr entry->addr_code
+expression -- ((entry->addr_code ^ addr) & ~4095ULL) == 0
+breakpoint set -f cputlb.c -l 1036 -c 'addr == 0xffffffffc02000d6ULL' -o true
+continue
+frame variable -f x addr entry->addr_code entry->addend
+expression -- ((entry->addr_code ^ addr) & ~4095ULL) == 0
+breakpoint set -f cputlb.c -l 1270 -c 'addr == 0xffffffffc02000d6ULL && code_read' -o true
+continue
+frame variable -f x addr tlb_addr entry->addr_code
+expression -- ((tlb_addr ^ addr) & ~4095ULL) == 0
+bt 6
+breakpoint set -f cputlb.c -l 1270 -c 'addr == 0xffffffffc0207008ULL && !code_read' -o true
+continue
+frame variable -f x addr tlb_addr entry->addr_read
+expression -- ((tlb_addr ^ addr) & ~4095ULL) == 0
+bt 6
+quit

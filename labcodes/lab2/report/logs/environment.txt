@@ -1,0 +1,20 @@
+$ uname -sm
+Darwin arm64
+
+$ riscv64-elf-gcc --version
+riscv64-elf-gcc (GCC) 16.2.0
+Copyright (C) 2026 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+$ qemu-system-riscv64 --version
+QEMU emulator version 11.1.2
+Copyright (c) 2003-2026 Fabrice Bellard and the QEMU Project developers
+
+$ riscv64-elf-gdb --version
+GNU gdb (GDB) 18.1
+Copyright (C) 2026 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.

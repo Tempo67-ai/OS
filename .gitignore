@@ -1,2 +1,9 @@
 /labcodes/lab1/bin/
 /labcodes/lab1/obj/
+
+/labcodes/lab2/bin/
+/labcodes/lab2/obj/
+/labcodes/lab2/debug/build/
+/labcodes/lab2/debug/qemu-4.1.1/
+/labcodes/lab2/**/__pycache__/
+.DS_Store

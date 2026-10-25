@@ -1,0 +1,26 @@
+(lldb) target create "os_lab2_attempt/debug/build/riscv64-softmmu/qemu-system-riscv64"
+Current executable set to '/Users/pailotien/Documents/轰轰烈烈的期末大复习/os_lab2_attempt/debug/build/riscv64-softmmu/qemu-system-riscv64' (arm64).
+(lldb) settings set -- target.run-args  "--version"
+(lldb) settings set target.disable-aslr false
+(lldb) breakpoint set -n main
+Breakpoint 1: 16 locations.
+(lldb) run
+11 locations added to breakpoint 1
+Process 52860 launched: '/Users/pailotien/Documents/轰轰烈烈的期末大复习/os_lab2_attempt/debug/build/riscv64-softmmu/qemu-system-riscv64' (arm64)
+Process 52860 stopped
+* thread #1, queue = 'com.apple.main-thread', stop reason = breakpoint 1.1
+    frame #0: 0x0000000103133220 qemu-system-riscv64`main(argc=2, argv=0x000000016ce1ac30, envp=0x000000016ce1ac48) at vl.c:2863:17
+   2860	    int snapshot, linux_boot;
+   2861	    const char *initrd_filename;
+   2862	    const char *kernel_filename, *kernel_cmdline;
+-> 2863	    const char *boot_order = NULL;
+    	                ^
+   2864	    const char *boot_once = NULL;
+   2865	    DisplayState *ds;
+   2866	    QemuOpts *opts, *machine_opts;
+Target 0: (qemu-system-riscv64) stopped.
+(lldb) bt 3
+* thread #1, queue = 'com.apple.main-thread', stop reason = breakpoint 1.1
+  * frame #0: 0x0000000103133220 qemu-system-riscv64`main(argc=2, argv=0x000000016ce1ac30, envp=0x000000016ce1ac48) at vl.c:2863:17
+    frame #1: 0x000000018a2544e4 dyld`start + 6992
+(lldb) quit

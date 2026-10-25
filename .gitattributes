@@ -1,2 +1,9 @@
 labcodes/lab1/** text eol=lf
 labcodes/lab1/report/images/** binary
+
+labcodes/lab2/** text eol=lf
+labcodes/lab2/report/screenshots/** binary
+labcodes/lab2/*.zip binary
+
+# Preserve original log bytes and their SHA256 values.
+labcodes/lab2/report/logs/** -text -diff

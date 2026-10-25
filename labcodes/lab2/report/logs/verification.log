@@ -1,0 +1,6 @@
+8 MiB: actual QEMU boot and all kernel self-checks PASS
+32 MiB: actual QEMU boot and all kernel self-checks PASS
+64 MiB: actual QEMU boot and all kernel self-checks PASS
+128 MiB: actual QEMU boot and all kernel self-checks PASS
+256 MiB: actual QEMU boot and all kernel self-checks PASS
+Official Best-Fit test functions, grading assertions and injector: unchanged

@@ -1,0 +1,288 @@
+--- original/lab2_new/Makefile
++++ lab2_new/Makefile
+@@ -6,7 +6,7 @@
+ V       := @
+ 
+ #ifndef GCCPREFIX
+-GCCPREFIX := riscv64-unknown-elf-
++GCCPREFIX ?= riscv64-unknown-elf-
+ #endif
+ 
+ ifndef QEMU
+@@ -165,18 +165,18 @@
+ 		-machine virt \
+ 		-nographic \
+ 		-bios default \
+-		-device loader,file=$(UCOREIMG),addr=0x80200000
++		-kernel $(UCOREIMG)
+ 
+ debug: $(UCOREIMG) $(SWAPIMG) $(SFSIMG)
+ 	$(V)$(QEMU) \
+ 		-machine virt \
+ 		-nographic \
+ 		-bios default \
+-		-device loader,file=$(UCOREIMG),addr=0x80200000\
++		-kernel $(UCOREIMG)\
+ 		-s -S
+ 
+ gdb:
+-	riscv64-unknown-elf-gdb \
++	$(GDB) \
+     -ex 'file bin/kernel' \
+     -ex 'set arch riscv:rv64' \
+     -ex 'target remote localhost:1234'
+@@ -186,7 +186,7 @@
+ 		-machine virt \
+ 		-nographic \
+ 		-bios default \
+-		-device loader,file=$(UCOREIMG),addr=0x80200000
++		-kernel $(UCOREIMG)
+ spike: $(UCOREIMG) $(SWAPIMG) $(SFSIMG)
+ 	$(V)$(SPIKE) $(UCOREIMG)
+ 
+--- original/lab2_new/kern/init/entry.S
++++ lab2_new/kern/init/entry.S
+@@ -58,7 +58,10 @@
+ boot_page_table_sv39:
+     # 0xffffffff_c0000000 map to 0x80000000 (1G)
+     # 前 511 个页表项均设置为 0 ，因此 V=0 ，意味着是空的(unmapped)
+-    .zero 8 * 511
++    .zero 8 * 2
++    # Identity mapping keeps the instruction fetch valid just after satp is set.
++    .quad (0x80000 << 10) | 0xcf
++    .zero 8 * 508
+     # 设置最后一个页表项，PPN=0x80000，标志位 VRWXAD 均为 1
+     .quad (0x80000 << 10) | 0xcf # VRWXAD
+ 
+--- original/lab2_new/kern/init/init.c
++++ lab2_new/kern/init/init.c
+@@ -4,6 +4,8 @@
+ #include <stdio.h>
+ #include <string.h>
+ #include <dtb.h>
++#include <buddy_pmm.h>
++#include <slub.h>
+ 
+ int kern_init(void) __attribute__((noreturn));
+ void grade_backtrace(void);
+@@ -39,6 +41,10 @@
+     // grade_backtrace();
+     pmm_init();  // init physical memory management
+ 
++    buddy_demo_check();
++    slub_check();
++    cprintf("[Lab2] all kernel checks completed\n");
++
+     /* do nothing */
+     while (1)
+         ;
+--- original/lab2_new/kern/mm/best_fit_pmm.c
++++ lab2_new/kern/mm/best_fit_pmm.c
+@@ -3,7 +3,139 @@
+ #include <best_fit_pmm.h>
+ #include <stdio.h>
+ 
+-//lab2 function2-2 YOUR CODE
++//lab2 function2-2 YOUR CODE (student ID not provided)
++static free_area_t free_area;
++
++#define free_list (free_area.free_list)
++#define nr_free (free_area.nr_free)
++
++static void
++best_fit_init(void) {
++    list_init(&free_list);
++    nr_free = 0;
++}
++
++static void
++best_fit_init_memmap(struct Page *base, size_t n) {
++    assert(n > 0);
++    struct Page *p = base;
++    for (; p != base + n; p ++) {
++        assert(PageReserved(p));
++        p->flags = p->property = 0;
++        set_page_ref(p, 0);
++    }
++    base->property = n;
++    SetPageProperty(base);
++    nr_free += n;
++    if (list_empty(&free_list)) {
++        list_add(&free_list, &(base->page_link));
++    } else {
++        list_entry_t* le = &free_list;
++        while ((le = list_next(le)) != &free_list) {
++            struct Page* page = le2page(le, page_link);
++            if (base < page) {
++                list_add_before(le, &(base->page_link));
++                break;
++            } else if (list_next(le) == &free_list) {
++                list_add(le, &(base->page_link));
++            }
++        }
++    }
++}
++
++static struct Page *
++best_fit_alloc_pages(size_t n) {
++    assert(n > 0);
++    if (n > nr_free) {
++        return NULL;
++    }
++    struct Page *page = NULL;
++    list_entry_t *le = &free_list;
++    while ((le = list_next(le)) != &free_list) {
++        struct Page *p = le2page(le, page_link);
++        if (p->property >= n && (page == NULL || p->property < page->property)) {
++            page = p;
++        }
++    }
++    if (page != NULL) {
++        list_entry_t* prev = list_prev(&(page->page_link));
++        list_del(&(page->page_link));
++        if (page->property > n) {
++            struct Page *p = page + n;
++            p->property = page->property - n;
++            SetPageProperty(p);
++            list_add(prev, &(p->page_link));
++        }
++        nr_free -= n;
++        ClearPageProperty(page);
++    }
++    return page;
++}
++
++static void
++best_fit_free_pages(struct Page *base, size_t n) {
++    assert(n > 0);
++    struct Page *p = base;
++    for (; p != base + n; p ++) {
++        assert(!PageReserved(p) && !PageProperty(p));
++        p->flags = 0;
++        set_page_ref(p, 0);
++    }
++    base->property = n;
++    SetPageProperty(base);
++    nr_free += n;
++
++    if (list_empty(&free_list)) {
++        list_add(&free_list, &(base->page_link));
++    } else {
++        list_entry_t* le = &free_list;
++        while ((le = list_next(le)) != &free_list) {
++            struct Page* page = le2page(le, page_link);
++            if (base < page) {
++                list_add_before(le, &(base->page_link));
++                break;
++            } else if (list_next(le) == &free_list) {
++                list_add(le, &(base->page_link));
++            }
++        }
++    }
++
++    list_entry_t* le = list_prev(&(base->page_link));
++    if (le != &free_list) {
++        p = le2page(le, page_link);
++        if (p + p->property == base) {
++            p->property += base->property;
++            ClearPageProperty(base);
++            list_del(&(base->page_link));
++            base = p;
++        }
++    }
++
++    le = list_next(&(base->page_link));
++    if (le != &free_list) {
++        p = le2page(le, page_link);
++        if (base + base->property == p) {
++            base->property += p->property;
++            ClearPageProperty(p);
++            list_del(&(p->page_link));
++        }
++    }
++}
++
++static size_t
++best_fit_nr_free_pages(void) {
++    return nr_free;
++}
++
++
++static void best_fit_check(void);
++const struct pmm_manager best_fit_pmm_manager = {
++    .name = "best_fit_pmm_manager",
++    .init = best_fit_init, .init_memmap = best_fit_init_memmap,
++    .alloc_pages = best_fit_alloc_pages, .free_pages = best_fit_free_pages,
++    .nr_free_pages = best_fit_nr_free_pages, .check = best_fit_check,
++};
++
+ 
+ // Framework tests: students must not modify basic_check or best_fit_check.
+ static void
+--- original/lab2_new/kern/mm/pmm.c
++++ lab2_new/kern/mm/pmm.c
+@@ -34,7 +34,7 @@
+ 
+ // init_pmm_manager - initialize a pmm_manager instance
+ static void init_pmm_manager(void) {
+-    pmm_manager = &default_pmm_manager;
++    pmm_manager = &best_fit_pmm_manager;
+     cprintf("memory management: %s\n", pmm_manager->name);
+     pmm_manager->init();
+ }
+@@ -61,7 +61,35 @@
+     return pmm_manager->nr_free_pages();
+ }
+ 
+-//lab2 function1 YOUR CODE
++//lab2 function1 YOUR CODE (student ID not provided)
++static void page_init(void) {
++    extern char end[];
++    uint64_t base = get_memory_base(), size = get_memory_size();
++    va_pa_offset = PHYSICAL_MEMORY_OFFSET;
++    if (base != DRAM_BASE || size == 0 || size > ~base)
++        panic("invalid DTB memory range");
++    uintptr_t limit = base + size;
++    if (limit > PHYSICAL_MEMORY_END) limit = PHYSICAL_MEMORY_END;
++    limit = ROUNDDOWN(limit, PGSIZE);
++    uintptr_t desc_pa = PADDR(ROUNDUP((uintptr_t)end, PGSIZE));
++    if (limit <= desc_pa) panic("RAM cannot hold kernel and descriptors");
++    npage = PPN(limit);
++    size_t count = npage - nbase;
++    if (count > (limit - desc_pa) / sizeof(struct Page))
++        panic("RAM cannot hold page descriptors");
++    pages = (struct Page *)(desc_pa + va_pa_offset);
++    for (size_t i = 0; i < count; i++) {
++        pages[i].flags = 0;
++        pages[i].property = 0;
++        set_page_ref(pages + i, 0);
++        SetPageReserved(pages + i);
++    }
++    uintptr_t free_pa = ROUNDUP(desc_pa + count * sizeof(struct Page), PGSIZE);
++    cprintf("physical memory map: [0x%016lx, 0x%016lx)\n", base, limit);
++    cprintf("free memory: [0x%016lx, 0x%016lx)\n", free_pa, limit);
++    if (free_pa < limit) init_memmap(pa2page(free_pa), (limit - free_pa) / PGSIZE);
++}
++
+ 
+ /* pmm_init - initialize the physical memory management */
+ void pmm_init(void) {
+--- original/lab2_new/tools/grade.sh
++++ lab2_new/tools/grade.sh
+@@ -130,6 +130,7 @@
+         exec $qemu -nographic $qemuopts -serial file:$qemu_out -monitor null -no-reboot $qemuextra
+     ) > $out 2> $err &
+     pid=$!
++    trap 'kill "$pid" 2>/dev/null || true' EXIT HUP INT TERM
+ 
+     sleep 1
+ 
+@@ -222,7 +223,7 @@
+ swapimg=$(make_print swapimg)
+ 
+ ## qemu-options
+-qemuopts="-machine virt -nographic -bios default -device loader,file=bin/ucore.img,addr=0x80200000"
++qemuopts="-machine virt -nographic -bios default -kernel bin/ucore.img"
+ 
+ ## the lab2 kernel only while(1) after entering kernel mode and never calls readline,
+ ## so no break function is needed and brkfun stays empty
