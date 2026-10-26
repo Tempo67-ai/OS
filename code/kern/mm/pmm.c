@@ -1,5 +1,7 @@
 #include <default_pmm.h>
 #include <best_fit_pmm.h>
+#include <buddy_pmm.h>
+#include <slub.h>
 #include <defs.h>
 #include <error.h>
 #include <memlayout.h>
@@ -34,7 +36,11 @@ static void check_alloc_page(void);
 
 // init_pmm_manager - initialize a pmm_manager instance
 static void init_pmm_manager(void) {
+#ifdef USE_BUDDY
+    pmm_manager = &buddy_pmm_manager;
+#else
     pmm_manager = &best_fit_pmm_manager;
+#endif
     cprintf("memory management: %s\n", pmm_manager->name);
     pmm_manager->init();
 }
@@ -61,7 +67,7 @@ size_t nr_free_pages(void) {
     return pmm_manager->nr_free_pages();
 }
 
-// Initialize all DRAM descriptors, then release only unused pages.
+// LAB2 2312418: initialize DRAM descriptors and release unused pages.
 static void page_init(void) {
     extern char end[];
     uint64_t mem_base = get_memory_base();
@@ -108,6 +114,11 @@ void pmm_init(void) {
 
     // use pmm->check to verify the correctness of the alloc/free function in a pmm
     check_alloc_page();
+#ifndef USE_BUDDY
+    buddy_check_pool();
+#endif
+    slub_init();
+    slub_check();
 
     extern char boot_page_table_sv39[];
     satp_virtual = (pte_t*)boot_page_table_sv39;

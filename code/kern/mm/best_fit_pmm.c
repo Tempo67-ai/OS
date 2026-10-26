@@ -3,7 +3,7 @@
 #include <best_fit_pmm.h>
 #include <stdio.h>
 
-// Keep blocks in address order for coalescing; scan sizes for best fit.
+// LAB2 2312418: address-ordered blocks; scan sizes for best fit.
 static free_area_t free_area;
 
 #define free_list (free_area.free_list)

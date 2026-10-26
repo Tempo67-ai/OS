@@ -1,3 +1,4 @@
+注意：扩展实现已加入，下面0xffffffffc02000d6是历史构建示例。每次先读当前kern_init地址，所有条件断点同步替换。
 # 三窗口、双 GDB 调试：从零照做
 
 已在 2026-10-26 本机实际验证进入 QEMU 4.1.1 的 get_physical_address，日志见 ../logs/qemu-walk-verified.txt。

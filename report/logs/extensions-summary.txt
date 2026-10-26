@@ -1,0 +1,16 @@
++ cc kern/mm/buddy_pmm.c
++ ld bin/kernel
+riscv64-unknown-elf-objcopy bin/kernel --strip-all -O binary bin/ucore.img
+make OBJDIR=obj-buddy BINDIR=bin-buddy DEFS=-DUSE_BUDDY
+make[1]: Entering directory '/mnt/d/GPT浏览器下载/lab2/submission/code'
++ cc kern/mm/buddy_pmm.c
++ ld bin-buddy/kernel
+riscv64-unknown-elf-objcopy bin-buddy/kernel --strip-all -O binary bin-buddy/ucore.img
+make[1]: Leaving directory '/mnt/d/GPT浏览器下载/lab2/submission/code'
+PASS: extensions-bestfit memory=64
+PASS: extensions-bestfit memory=128
+PASS: extensions-bestfit memory=256
+PASS: extensions-buddy memory=64
+PASS: extensions-buddy memory=128
+PASS: extensions-buddy memory=256
+All extension configurations passed.

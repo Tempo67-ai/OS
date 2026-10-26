@@ -4,3 +4,5 @@
 /code/.gdb.in
 /code/cscope*
 /code/tags
+/code/obj-buddy/
+/code/bin-buddy/

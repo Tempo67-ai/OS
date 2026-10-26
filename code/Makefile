@@ -238,3 +238,10 @@ tags:
 	$(V)find . -type f -name "*.[chS]" >cscope.files
 	$(V)cscope -bq 
 	$(V)ctags -L cscope.files
+
+# Use a separate object/output directory so switching PMMs cannot reuse stale flags.
+.PHONY: buddy buddy-build
+buddy-build:
+	$(MAKE) OBJDIR=obj-buddy BINDIR=bin-buddy DEFS=-DUSE_BUDDY
+buddy: buddy-build
+	$(QEMU) -machine virt -nographic -bios default -kernel bin-buddy/ucore.img

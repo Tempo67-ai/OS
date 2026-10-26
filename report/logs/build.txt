@@ -5,8 +5,10 @@
 + cc kern/driver/console.c
 + cc kern/driver/dtb.c
 + cc kern/mm/best_fit_pmm.c
++ cc kern/mm/buddy_pmm.c
 + cc kern/mm/default_pmm.c
 + cc kern/mm/pmm.c
++ cc kern/mm/slub.c
 + cc libs/printfmt.c
 + cc libs/readline.c
 + cc libs/sbi.c
