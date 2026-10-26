@@ -1,0 +1,34 @@
+$1 = 0xffffffffc02000d6
+$2 = 0x8000000000080205
+#0  get_physical_address (env=0x61a5feff8100, physical=0x7c6d8cdfe200, prot=0x7c6d8cdfe1f4, addr=18446744072637907158, access_type=2, mmu_idx=1) at /var/tmp/oslab-qemu-debug/qemu-4.1.1/target/riscv/cpu_helper.c:158
+#1  0x000061a5f0224552 in riscv_cpu_tlb_fill (cs=0x61a5fefef6f0, address=18446744072637907158, size=0, access_type=MMU_INST_FETCH, mmu_idx=1, probe=false, retaddr=0) at /var/tmp/oslab-qemu-debug/qemu-4.1.1/target/riscv/cpu_helper.c:451
+#2  0x000061a5f0169a01 in tlb_fill (cpu=0x61a5fefef6f0, addr=18446744072637907158, size=0, access_type=MMU_INST_FETCH, mmu_idx=1, retaddr=0) at /var/tmp/oslab-qemu-debug/qemu-4.1.1/accel/tcg/cputlb.c:878
+#3  0x000061a5f016a0a8 in get_page_addr_code (env=0x61a5feff8100, addr=18446744072637907158) at /var/tmp/oslab-qemu-debug/qemu-4.1.1/accel/tcg/cputlb.c:1032
+#4  0x000061a5f018eb49 in tb_htable_lookup (cpu=0x61a5fefef6f0, pc=18446744072637907158, cs_base=0, flags=24577, cf_mask=4278714368) at /var/tmp/oslab-qemu-debug/qemu-4.1.1/accel/tcg/cpu-exec.c:339
+#5  0x000061a5f0187b93 in tb_lookup__cpu_state (cpu=0x61a5fefef6f0, pc=0x7c6d8cdfe3f0, cs_base=0x7c6d8cdfe3e8, flags=0x7c6d8cdfe3e4, cf_mask=4278714368) at /var/tmp/oslab-qemu-debug/qemu-4.1.1/include/exec/tb-lookup.h:43
+#6  0x000061a5f0187f4c in helper_lookup_tb_ptr (env=0x61a5feff8100) at /var/tmp/oslab-qemu-debug/qemu-4.1.1/accel/tcg/tcg-runtime.c:154
+#7  0x00007c6d8cf8df77 in code_gen_buffer ()
+(More stack frames follow...)
+Breakpoint 2 at 0x61a5f0223dee: file /var/tmp/oslab-qemu-debug/qemu-4.1.1/target/riscv/cpu_helper.c, line 268.
+Continuing.
+
+Thread 2 "qemu-system-ris" hit Breakpoint 2, get_physical_address (env=0x61a5feff8100, physical=0x7c6d8cdfe200, prot=0x7c6d8cdfe1f4, addr=18446744072637907158, access_type=2, mmu_idx=1) at /var/tmp/oslab-qemu-debug/qemu-4.1.1/target/riscv/cpu_helper.c:268
+268	        } else if ((pte & PTE_U) && ((mode != PRV_U) &&
+$3 = 0x80205000
+$4 = 3
+$5 = 18
+$6 = 511
+$7 = 0x80205ff8
+$8 = 0x200000cf
+$9 = 0x80000
+Breakpoint 3 at 0x61a5f022405f: file /var/tmp/oslab-qemu-debug/qemu-4.1.1/target/riscv/cpu_helper.c, line 345.
+Continuing.
+
+Thread 2 "qemu-system-ris" hit Breakpoint 3, get_physical_address (env=0x61a5feff8100, physical=0x7c6d8cdfe200, prot=0x7c6d8cdfe1f4, addr=18446744072637907158, access_type=2, mmu_idx=1) at /var/tmp/oslab-qemu-debug/qemu-4.1.1/target/riscv/cpu_helper.c:345
+345	            if ((pte & PTE_W) &&
+$10 = 18
+$11 = 0x80000
+$12 = 0xffffffffc02000d6
+346	                    (access_type == MMU_DATA_STORE || (pte & PTE_D))) {
+347	                *prot |= PAGE_WRITE;
+$13 = 0x80200000
