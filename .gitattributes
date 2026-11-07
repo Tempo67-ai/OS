@@ -7,3 +7,5 @@ labcodes/lab2/*.zip binary
 
 # Preserve original log bytes and their SHA256 values.
 labcodes/lab2/report/logs/** -text -diff
+labcodes/lab3/** text eol=lf
+labcodes/lab3/report/images/** binary
