@@ -9,3 +9,8 @@ labcodes/lab2/*.zip binary
 labcodes/lab2/report/logs/** -text -diff
 labcodes/lab3/** text eol=lf
 labcodes/lab3/report/images/** binary
+
+# Lab4 raw compiler and serial evidence retains original whitespace.
+labcodes/lab4/** text eol=lf
+labcodes/lab4/report/logs/*.log -text -whitespace
+labcodes/lab4/report/demo-validation/*.log -text -whitespace

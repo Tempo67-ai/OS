@@ -1,0 +1,17 @@
+riscv64-elf-gcc -march=rv64imac_zicsr_zifencei -mabi=lp64 -mcmodel=medany -std=gnu99 -O2 -g -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unused-function -ffreestanding -fno-builtin -fno-stack-protector -fno-pie -msmall-data-limit=0 -nostdinc -Ilibs -Ikern/debug -Ikern/driver -Ikern/init -Ikern/libs -Ikern/mm -Ikern/process -Ikern/schedule -Ikern/sync -Ikern/test -Ikern/trap  -MMD -MP -c kern/trap/trapentry.S -o obj/kern/trap/trapentry.o
+riscv64-elf-gcc -march=rv64imac_zicsr_zifencei -mabi=lp64 -mcmodel=medany -std=gnu99 -O2 -g -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unused-function -ffreestanding -fno-builtin -fno-stack-protector -fno-pie -msmall-data-limit=0 -nostdinc -Ilibs -Ikern/debug -Ikern/driver -Ikern/init -Ikern/libs -Ikern/mm -Ikern/process -Ikern/schedule -Ikern/sync -Ikern/test -Ikern/trap  -MMD -MP -c libs/string.c -o obj/libs/string.o
+riscv64-elf-gcc -march=rv64imac_zicsr_zifencei -mabi=lp64 -mcmodel=medany -std=gnu99 -O2 -g -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unused-function -ffreestanding -fno-builtin -fno-stack-protector -fno-pie -msmall-data-limit=0 -nostdinc -Ilibs -Ikern/debug -Ikern/driver -Ikern/init -Ikern/libs -Ikern/mm -Ikern/process -Ikern/schedule -Ikern/sync -Ikern/test -Ikern/trap  -MMD -MP -c kern/debug/kdebug.c -o obj/kern/debug/kdebug.o
+riscv64-elf-gcc -march=rv64imac_zicsr_zifencei -mabi=lp64 -mcmodel=medany -std=gnu99 -O2 -g -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unused-function -ffreestanding -fno-builtin -fno-stack-protector -fno-pie -msmall-data-limit=0 -nostdinc -Ilibs -Ikern/debug -Ikern/driver -Ikern/init -Ikern/libs -Ikern/mm -Ikern/process -Ikern/schedule -Ikern/sync -Ikern/test -Ikern/trap  -MMD -MP -c kern/debug/kmonitor.c -o obj/kern/debug/kmonitor.o
+kern/debug/kmonitor.c: In function 'runcmd':
+kern/debug/kmonitor.c:73:19: error: comparison of integer expressions of different signedness: 'int' and 'long unsigned int' [-Werror=sign-compare]
+   73 |     for (i = 0; i < NCOMMANDS; i ++) {
+      |                   ^
+kern/debug/kmonitor.c: In function 'mon_help':
+kern/debug/kmonitor.c:107:19: error: comparison of integer expressions of different signedness: 'int' and 'long unsigned int' [-Werror=sign-compare]
+  107 |     for (i = 0; i < NCOMMANDS; i ++) {
+      |                   ^
+riscv64-elf-gcc -march=rv64imac_zicsr_zifencei -mabi=lp64 -mcmodel=medany -std=gnu99 -O2 -g -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unused-function -ffreestanding -fno-builtin -fno-stack-protector -fno-pie -msmall-data-limit=0 -nostdinc -Ilibs -Ikern/debug -Ikern/driver -Ikern/init -Ikern/libs -Ikern/mm -Ikern/process -Ikern/schedule -Ikern/sync -Ikern/test -Ikern/trap  -MMD -MP -c kern/debug/panic.c -o obj/kern/debug/panic.o
+riscv64-elf-gcc -march=rv64imac_zicsr_zifencei -mabi=lp64 -mcmodel=medany -std=gnu99 -O2 -g -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unused-function -ffreestanding -fno-builtin -fno-stack-protector -fno-pie -msmall-data-limit=0 -nostdinc -Ilibs -Ikern/debug -Ikern/driver -Ikern/init -Ikern/libs -Ikern/mm -Ikern/process -Ikern/schedule -Ikern/sync -Ikern/test -Ikern/trap  -MMD -MP -c kern/driver/clock.c -o obj/kern/driver/clock.o
+cc1: all warnings being treated as errors
+make: *** [obj/kern/debug/kmonitor.o] Error 1
+make: *** Waiting for unfinished jobs....

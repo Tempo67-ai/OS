@@ -1,0 +1,8 @@
+normal-O2-32M: PASS
+normal-O2-128M: PASS
+normal-O2-256M: PASS
+selftest-O2-32M: PASS
+selftest-O2-128M: PASS
+selftest-O0-128M: PASS
+Self-check matrix: 6/6 passed (not official grading)
+final-normal-O2-128M: PASS
