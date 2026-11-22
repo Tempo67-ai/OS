@@ -9,3 +9,6 @@
 .DS_Store
 /labcodes/lab3/bin/
 /labcodes/lab3/obj/
+/labcodes/lab4/bin/
+/labcodes/lab4/obj/
+/labcodes/lab4/**/__pycache__/
