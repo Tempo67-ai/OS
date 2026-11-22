@@ -1,0 +1,132 @@
+0x0000000000001000 in ?? ()
+Temporary breakpoint 1 at 0xffffffffc0204210: file kern/process/proc.c, line 156.
+
+Temporary breakpoint 1, cpu_idle () at kern/process/proc.c:156
+156	void cpu_idle(void) {
+
+[1] Created threads before first scheduling
+$1 = 0
+$2 = 0
+$3 = 1
+$4 = 2
+$5 = 0xffffffffc02038b0
+$6 = 0xffffffffc038fee0
+$7 = 0xffffffffc0200054
+forkret in section .text
+kernel_thread_entry in section .text
+Temporary breakpoint 2 at 0xffffffffc020005e: file kern/process/switch.S, line 6.
+
+Temporary breakpoint 2, switch_to () at kern/process/switch.S:6
+6	    STORE ra, 0*REGBYTES(a0)
+
+[2] switch_to entry: a0=old context, a1=new context
+a0             0xffffffffc038d0b0	-1070018384
+a1             0xffffffffc038d1b0	-1070018128
+sp             0xffffffffc0208f70	0xffffffffc0208f70
+ra             0xffffffffc0203fe2	0xffffffffc0203fe2 <proc_run+72>
+0xffffffffc038d0b0:	0x0000000000000000	0x0000000000000000
+0xffffffffc038d0c0:	0x0000000000000000	0x0000000000000000
+0xffffffffc038d0d0:	0x0000000000000000	0x0000000000000000
+0xffffffffc038d0e0:	0x0000000000000000	0x0000000000000000
+0xffffffffc038d0f0:	0x0000000000000000	0x0000000000000000
+0xffffffffc038d100:	0x0000000000000000	0x0000000000000000
+0xffffffffc038d110:	0x0000000000000000	0x0000000000000000
+0xffffffffc038d1b0:	0xffffffffc02038b0	0xffffffffc038fee0
+0xffffffffc038d1c0:	0x0000000000000000	0x0000000000000000
+0xffffffffc038d1d0:	0x0000000000000000	0x0000000000000000
+0xffffffffc038d1e0:	0x0000000000000000	0x0000000000000000
+0xffffffffc038d1f0:	0x0000000000000000	0x0000000000000000
+0xffffffffc038d200:	0x0000000000000000	0x0000000000000000
+0xffffffffc038d210:	0x0000000000000000	0x0000000000000000
+Dump of assembler code for function switch_to:
+=> 0xffffffffc020005e <+0>:	sd	ra,0(a0)
+   0xffffffffc0200062 <+4>:	sd	sp,8(a0)
+   0xffffffffc0200066 <+8>:	sd	s0,16(a0)
+   0xffffffffc0200068 <+10>:	sd	s1,24(a0)
+   0xffffffffc020006a <+12>:	sd	s2,32(a0)
+   0xffffffffc020006e <+16>:	sd	s3,40(a0)
+   0xffffffffc0200072 <+20>:	sd	s4,48(a0)
+   0xffffffffc0200076 <+24>:	sd	s5,56(a0)
+   0xffffffffc020007a <+28>:	sd	s6,64(a0)
+   0xffffffffc020007e <+32>:	sd	s7,72(a0)
+   0xffffffffc0200082 <+36>:	sd	s8,80(a0)
+   0xffffffffc0200086 <+40>:	sd	s9,88(a0)
+   0xffffffffc020008a <+44>:	sd	s10,96(a0)
+   0xffffffffc020008e <+48>:	sd	s11,104(a0)
+   0xffffffffc0200092 <+52>:	ld	ra,0(a1)
+   0xffffffffc0200096 <+56>:	ld	sp,8(a1)
+   0xffffffffc020009a <+60>:	ld	s0,16(a1)
+   0xffffffffc020009c <+62>:	ld	s1,24(a1)
+   0xffffffffc020009e <+64>:	ld	s2,32(a1)
+   0xffffffffc02000a2 <+68>:	ld	s3,40(a1)
+   0xffffffffc02000a6 <+72>:	ld	s4,48(a1)
+   0xffffffffc02000aa <+76>:	ld	s5,56(a1)
+   0xffffffffc02000ae <+80>:	ld	s6,64(a1)
+   0xffffffffc02000b2 <+84>:	ld	s7,72(a1)
+   0xffffffffc02000b6 <+88>:	ld	s8,80(a1)
+   0xffffffffc02000ba <+92>:	ld	s9,88(a1)
+   0xffffffffc02000be <+96>:	ld	s10,96(a1)
+   0xffffffffc02000c2 <+100>:	ld	s11,104(a1)
+   0xffffffffc02000c6 <+104>:	ret
+End of assembler dump.
+Temporary breakpoint 3 at 0xffffffffc02038b0: file kern/process/proc.c, line 50.
+
+Temporary breakpoint 3, forkret () at kern/process/proc.c:50
+50	static void forkret(void) {forkrets(current->tf);}
+
+[3] First return reached forkret
+=> 0xffffffffc02038b0 <forkret>:	auipc	a5,0x7
+Temporary breakpoint 4 at 0xffffffffc0200262: file kern/trap/trapentry.S, line 130.
+
+Temporary breakpoint 4, forkrets () at kern/trap/trapentry.S:130
+130	    mv sp, a0
+
+[4] forkrets receives the new trapframe in a0
+$8 = 0xffffffffc038fee0
+$9 = 0xffffffffc038fee0
+0xffffffffc038fee0:	0x0000000000000000	0x0000000000000000
+0xffffffffc038fef0:	0xffffffffc038fee0	0x0000000000000000
+0xffffffffc038ff00:	0x0000000000000000	0x0000000000000000
+0xffffffffc038ff10:	0x0000000000000000	0x0000000000000000
+0xffffffffc038ff20:	0xffffffffc0203d52	0xffffffffc0205ad0
+0xffffffffc038ff30:	0x0000000000000000	0x0000000000000000
+0xffffffffc038ff40:	0x0000000000000000	0x0000000000000000
+0xffffffffc038ff50:	0x0000000000000000	0x0000000000000000
+0xffffffffc038ff60:	0x0000000000000000	0x0000000000000000
+0xffffffffc038ff70:	0x0000000000000000	0x0000000000000000
+0xffffffffc038ff80:	0x0000000000000000	0x0000000000000000
+0xffffffffc038ff90:	0x0000000000000000	0x0000000000000000
+0xffffffffc038ffa0:	0x0000000000000000	0x0000000000000000
+0xffffffffc038ffb0:	0x0000000000000000	0x0000000000000000
+0xffffffffc038ffc0:	0x0000000000000000	0x0000000000000000
+0xffffffffc038ffd0:	0x0000000000000000	0x0000000000000000
+0xffffffffc038ffe0:	0x8000000200006120	0xffffffffc0200054
+0xffffffffc038fff0:	0x0000000000000000	0x0000000000000000
+Temporary breakpoint 5 at 0xffffffffc0200214: file kern/trap/trapentry.S, line 124.
+
+Temporary breakpoint 5, __trapret () at kern/trap/trapentry.S:124
+124	    RESTORE_ALL
+
+[5] Restore trapframe before sret
+=> 0xffffffffc0200214 <__trapret>:	ld	s1,256(sp)
+   0xffffffffc0200216 <__trapret+2>:	ld	s2,264(sp)
+   0xffffffffc0200218 <__trapret+4>:	csrw	sstatus,s1
+   0xffffffffc020021c <__trapret+8>:	csrw	sepc,s2
+   0xffffffffc0200220 <__trapret+12>:	ld	ra,8(sp)
+Temporary breakpoint 6 at 0xffffffffc0200054: file kern/process/entry.S, line 4.
+
+Temporary breakpoint 6, kernel_thread_entry () at kern/process/entry.S:4
+4	    mv a0, s1
+
+[6] sret reached kernel_thread_entry in S-mode
+sp             0xffffffffc038fee0	0xffffffffc038fee0
+s0             0xffffffffc0203d52  0xffffffffc0203d52 <init_main>
+s1             0xffffffffc0205ad0	-1071621424
+sstatus        0x8000000200006022	-9223372028264816606
+$10 = 1
+=> 0xffffffffc0200054 <kernel_thread_entry>:	mv	a0,s1
+   0xffffffffc0200056 <kernel_thread_entry+2>:	jalr	s0
+   0xffffffffc0200058 <kernel_thread_entry+4>:	jal	0xffffffffc0204038 <do_exit>
+
+GDB_FIRST_RUN_CHAIN_PASS
+[Inferior 1 (process 1) detached]

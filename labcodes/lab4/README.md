@@ -12,6 +12,17 @@
 
 未实现用户程序装载、用户态系统调用、按需分页/换页、多 hart 同步或抢占式调度。VMA 是描述结构，不会按访问自动分配页面。内核线程共享 `boot_pgdir_va`，`copy_mm` 遇到非空用户 mm 明确返回错误。
 
+## 一键答辩演示
+
+macOS双击 `一键答辩演示.command`，或在本目录执行：
+
+```sh
+python3 tools/defense_demo.py
+# 连续自动预演：python3 tools/defense_demo.py --auto
+```
+
+依次展示真实启动、核心代码、GDB首次切换链和完整本地自检；按回车推进。在临时副本构建，演示日志单独保存在demo_logs。详见[演示说明](DEMO.md)。
+
 ## 构建与运行
 
 需要 GNU Make、RISC-V bare-metal GCC/binutils、QEMU RISC-V（含支持 legacy SBI 的默认 OpenSBI）、Python 3。实际验证版本见 `report/logs/summary.json`。
